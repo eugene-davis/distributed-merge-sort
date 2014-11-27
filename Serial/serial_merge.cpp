@@ -32,8 +32,20 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+	// Open descriptive file
+	ifstream descriptFile;
+	string descriptFileName(argv[1]);
+	descriptFileName = "descrip_" + descriptFileName;
+	descriptFile.open(descriptFileName.c_str());
+
+	if (!descriptFile.is_open())
+	{
+		cout << "Failed to open descriptive file for reading." << endl;
+		return 0;
+	}
+
 	// Get size of data (from first line of file)
-	dataFile >> dataSize;
+	descriptFile  >> dataSize;
 
 	// Check that the data size is in range
 	if (dataSize < 50000000 || dataSize > 140000000)

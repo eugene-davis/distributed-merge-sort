@@ -44,8 +44,22 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	// First line has the size of the data set
-	dataFile << dataSize << endl;
+	// Open descriptor file (holds size of array)
+	ofstream descriptFile;
+    string descriptFileName(argv[1]);
+    descriptFileName = "descrip_" + descriptFileName;
+	descriptFile.open(descriptFileName.c_str(), ofstream::out | ofstream::trunc);
+
+	if (!descriptFile.is_open())
+	{
+		cout << "Failed to open descriptive file for writing." << endl;
+		return 0;
+	}
+
+	// Write size of data set to descriptive file
+	descriptFile << dataSize << endl;
+
+	descriptFile.close();
 
 	// Seed random number generator
 	srand(time(NULL));
