@@ -3,6 +3,11 @@
 
 using namespace std;
 
+// Prototypes for merge sort functions
+void mergeSplit(int destArray[], int originArray[], int begin, int end);
+void merge(int destArray[], int orginArray[], int begin, int middle, int end);
+void copy(int destArray[], int orginArray[], int begin, int end);
+
 int main(int argc, char *argv[])
 {
 	int dataSize = 0;
@@ -29,5 +34,93 @@ int main(int argc, char *argv[])
 	// Get size of data (from first line of file)
 	dataFile >> dataSize;
 
-	cout << dataSize << endl;
+	// Check that the data size is in range
+	if (dataSize < 50000000 || dataSize > 140000000)
+	{
+		cout << "The data size indicated by the file is out of range." << endl;
+	}
+
+	// Setup array to hold data
+	int* data = new int[dataSize];
+
+	// Start reading in data
+	int currentData;
+	for (currentData = 0; currentData < dataSize && !dataFile.eof(); currentData++)
+	{
+		dataFile >> data[currentData];
+	}
+
+	// Progress the dataFile by one more line to hit end of file (assuming valid file)
+	dataFile.ignore(10000000000000, '\n');
+
+	// Verify that the data grabbed is the same amount as dataSize indicated
+	// and that the end of file has been reached - i.e. make sure the data
+	// file given was valid
+	if (currentData != dataSize || !dataFile.eof())
+	{
+		cout << "The data size did not match the first line of the file, suggesting the input file was invalid or corrupted." << endl;
+	}
+
+
+	// Merge sort
+	
+	// Create temp array that will be used during sorting process
+	// actual results will be returned back into A
+	int* tempArray = new int[dataSize];
+
+	mergeSplit(tempArray, data, 0, dataSize);
+}
+
+// The basic portion of the merge sort, recursive function which will split
+// until it hits an array of size one, then call merge as it goes back up
+void mergeSplit(int destArray[], int originArray[], int begin, int end)
+{
+	// Check if split down to 1, in which case "sorted"
+	if (end - begin <= 1)
+	{
+		return;
+	}
+
+	// Split recursion
+	middle = (end + begin) / 2;
+	mergeSplit(destArray, originArray, begin, middle);
+	mergeSplit(destArray, originArray, middle, end);
+
+	// Merge
+	merge(destArray, originArray, begin, middle, end);
+	
+	// Copy results back into origin array
+	copy(destArray, originArray, begin, end);
+}
+
+void merge(int destArray[], int orginArray[], int begin, int middle, int end)
+{
+	beginTemp = begin;
+	middleTemp = middle;
+
+	// Go while there are elements left to go over
+	for (int i = begin; i < end; i++)
+	{
+		// If left array's current element is greater than or equal to rights current element, copy into appropriate location
+		if (beginTemp < middle && (middleTemp >= end || originArray[beginTemp] <= originArray[middleTemp])
+		{
+			destArray[j] = originArray[beginTemp];
+			beginTemp++;
+		}
+		// If it wasn't larger, copy in the right one
+		else
+		{
+			destArray[j] = originArray[middleTemp];
+			middleTemp++;
+		}
+	}
+}
+
+// Moves the destArray back into the originArray now that it is sorted
+void copy(int destArray[], int orginArray[], int begin, int end)
+{
+	for (int i = begin; i < end; i++)
+	{
+		originArray[i] = destArray[i];
+	}
 }
