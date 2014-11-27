@@ -1,12 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
 // Prototypes for merge sort functions
 void mergeSplit(int destArray[], int originArray[], int begin, int end);
-void merge(int destArray[], int orginArray[], int begin, int middle, int end);
-void copy(int destArray[], int orginArray[], int begin, int end);
+void merge(int destArray[], int originArray[], int begin, int middle, int end);
+void copy(int destArray[], int originArray[], int begin, int end);
 
 int main(int argc, char *argv[])
 {
@@ -69,6 +70,24 @@ int main(int argc, char *argv[])
 	int* tempArray = new int[dataSize];
 
 	mergeSplit(tempArray, data, 0, dataSize);
+
+	// Output array
+	ofstream outputFile;
+	string outputFileName(argv[1]);
+	outputFileName = "sorted_" + outputFileName;
+	outputFile.open(outputFileName.c_str(), ofstream::out | ofstream::trunc);
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << outputFileName  << " file for writing." << endl;
+		return 0;
+	}
+	
+	// Write to file
+	for (int i = 0; i < dataSize; i++)
+        {
+                outputFile << data[i] << endl;
+        }
+
 }
 
 // The basic portion of the merge sort, recursive function which will split
@@ -82,7 +101,7 @@ void mergeSplit(int destArray[], int originArray[], int begin, int end)
 	}
 
 	// Split recursion
-	middle = (end + begin) / 2;
+	int middle = (end + begin) / 2;
 	mergeSplit(destArray, originArray, begin, middle);
 	mergeSplit(destArray, originArray, middle, end);
 
@@ -93,31 +112,31 @@ void mergeSplit(int destArray[], int originArray[], int begin, int end)
 	copy(destArray, originArray, begin, end);
 }
 
-void merge(int destArray[], int orginArray[], int begin, int middle, int end)
+void merge(int destArray[], int originArray[], int begin, int middle, int end)
 {
-	beginTemp = begin;
-	middleTemp = middle;
+	int beginTemp = begin;
+	int middleTemp = middle;
 
 	// Go while there are elements left to go over
 	for (int i = begin; i < end; i++)
 	{
 		// If left array's current element is greater than or equal to rights current element, copy into appropriate location
-		if (beginTemp < middle && (middleTemp >= end || originArray[beginTemp] <= originArray[middleTemp])
+		if (beginTemp < middle && (middleTemp >= end || originArray[beginTemp] <= originArray[middleTemp]))
 		{
-			destArray[j] = originArray[beginTemp];
+			destArray[i] = originArray[beginTemp];
 			beginTemp++;
 		}
 		// If it wasn't larger, copy in the right one
 		else
 		{
-			destArray[j] = originArray[middleTemp];
+			destArray[i] = originArray[middleTemp];
 			middleTemp++;
 		}
 	}
 }
 
 // Moves the destArray back into the originArray now that it is sorted
-void copy(int destArray[], int orginArray[], int begin, int end)
+void copy(int destArray[], int originArray[], int begin, int end)
 {
 	for (int i = begin; i < end; i++)
 	{
