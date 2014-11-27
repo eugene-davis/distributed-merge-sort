@@ -44,6 +44,9 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+	// First line has the size of the data set
+	dataFile << dataSize << endl;
+
 	// Seed random number generator
 	srand(time(NULL));
 	
