@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
 	// Open descriptor file (holds size of array)
 	ofstream descriptFile;
-    string descriptFileName(argv[1]);
+    string descriptFileName(argv[2]);
     descriptFileName = "descrip_" + descriptFileName;
 	descriptFile.open(descriptFileName.c_str(), ofstream::out | ofstream::trunc);
 
