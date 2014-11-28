@@ -14,8 +14,6 @@ using namespace std;
 
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
-// Define the typical size - transmissions may be smaller
-#define SIZE 1024
 
 #define debug
 
@@ -111,9 +109,9 @@ int main(int argc, char *argv[])
 	
 	// Write to file
 	for (int i = 0; i < dataSize; i++)
-        {
-                outputFile << data[i] << endl;
-        }
+    {
+    	outputFile << data[i] << endl;
+    }
 
 }
 
@@ -180,8 +178,8 @@ bool clientConnection(int data[], int start, int end)
 	char ip[100];
 	struct hostent *hostDetails; // Details returned by gethostby name
 	struct in_addr **addresses; // List of addresses contained in hostDetails
-	int flags;
-	int sendStatus;
+	int flags = 0;
+	int sendStatus, rcvStatus;
 
 	// Get hostname
 	hostDetails = gethostbyname(hostname);
@@ -221,8 +219,6 @@ bool clientConnection(int data[], int start, int end)
 		perror("Error connecting to client");
 		return false;
 	}
-	
-	cout << dataNumbers << endl;
 
 	dataNumbers = htonl(dataNumbers);
 
@@ -238,14 +234,16 @@ bool clientConnection(int data[], int start, int end)
 	#ifdef debug
 	// debug by writing to file what is being sent, so it can be compared to client
 	ofstream testFile;
-	testFile.open("testServerList", ofstream::out | ofstream::trunc);
+	testFile.open("testServerSendList", ofstream::out | ofstream::trunc);
 	for (int i = start; i < end; i++)
 	{
 		testFile << data[i] << endl;
 	}
+	testFile.close();
 	#endif
+
+
 	int size = (end - start) * sizeof(int);
-	char *buff = new char[size];
 
 	// Send data
 	int currentData = 0;
@@ -256,10 +254,30 @@ bool clientConnection(int data[], int start, int end)
 
 		if (sendStatus < 0)
 		{
-			perror("Error sending data size");
+			perror("Error sending data");
 			return false;
 		}
 	}
+
+
+	// Recieve sorted data
+	currentData = 0;
+	for (int i = start; i < end; i++)
+	{
+		rcvStatus = recv(socket1, (char *) &currentData, sizeof(int), 0);
+		data[i] = ntohl(currentData);
+	}
+
+	#ifdef debug
+	// debug by writing to file what is being recieved, so it can be compared to client
+	testFile.open("testServerRecieveList", ofstream::out | ofstream::trunc);
+	for (int i = start; i < end; i++)
+	{
+		testFile << data[i] << endl;
+	}
+	testFile.close();
+	#endif
+
 	close(socket1);
 
 	return true;

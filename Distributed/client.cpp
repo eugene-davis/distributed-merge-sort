@@ -14,9 +14,6 @@ using namespace std;
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
 
-// Define typical packet size (can be smaller)
-#define SIZE 1024
-
 #define debug
 
 int main()
@@ -27,10 +24,11 @@ int main()
 	int bindStatus;
 	int listenStatus;
 	int socketConnection;
-	int rcvStatus;
+	int rcvStatus, sendStatus;
 	int totalNumbers = 0; // Number of integers to be recieved to sort
 	socklen_t serverAddrLen;
 	int *data;
+	int flags = 0;
 	
 	// Get hostname
 	gethostname(localHostname, sizeof(localHostname));
@@ -110,6 +108,23 @@ int main()
 		testFile << data[i] << endl;
 	}
 	#endif
+
+	// Perform merge sort
+
+
+	// Send sorted list back to server
+	currentData = 0;
+	for (int i = 0; i < totalNumbers; i++)
+	{
+		currentData = htonl(data[i]);
+		sendStatus = send(socketConnection, (char *) &currentData, sizeof(int), flags);
+
+		if (sendStatus < 0)
+		{
+			perror("Error sending data");
+			return false;
+		}
+	}
 
 	return 0;
 }
