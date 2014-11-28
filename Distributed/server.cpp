@@ -159,7 +159,7 @@ bool clientConnection()
 	struct sockaddr_in sock1Addr;
 	int connectionStatus;
 	char hostname[100] = "localhost"; // Temp, will be parameter soon
-	int dataNumbers = htonl(8); // Temp, will be parameter soon
+	int dataNumbers = 800; // Temp, will be parameter soon
 	char ip[100];
 	struct hostent *hostDetails; // Details returned by gethostby name
 	struct in_addr **addresses; // List of addresses contained in hostDetails
@@ -205,8 +205,10 @@ bool clientConnection()
 		return false;
 	}
 
+	dataNumbers = htonl(dataNumbers);
+
 	// Send size of data
-	sendStatus = send(socket1, (char *) dataNumbers, sizeof(int), flags);
+	sendStatus = send(socket1, (char *) &dataNumbers, sizeof(int), flags);
 
 	return true;
 }
