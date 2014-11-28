@@ -14,7 +14,7 @@
 using namespace std;
 
 // Random, high port to reduce likelihood of colliding
-#define PORT 6862
+#define PORT 68015
 
 // Number of clients
 #define NUM_MACHINES 20

@@ -17,7 +17,7 @@ void merge(int destArray[], int originArray[], int begin, int middle, int end);
 void copy(int destArray[], int originArray[], int begin, int end);
 
 // Random, high port to reduce likelihood of colliding
-#define PORT 6862
+#define PORT 68015
 
 //#define debug
 
