@@ -11,10 +11,15 @@
 
 using namespace std;
 
+// Prototypes for merge sort functions
+void mergeSplit(int destArray[], int originArray[], int begin, int end);
+void merge(int destArray[], int originArray[], int begin, int middle, int end);
+void copy(int destArray[], int originArray[], int begin, int end);
+
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
 
-#define debug
+//#define debug
 
 int main()
 {
@@ -110,6 +115,10 @@ int main()
 	#endif
 
 	// Perform merge sort
+	int* tempArray = new int[totalNumbers];
+
+	mergeSplit(tempArray, data, 0, totalNumbers);
+	
 
 
 	// Send sorted list back to server
@@ -127,4 +136,58 @@ int main()
 	}
 
 	return 0;
+}
+
+// The basic portion of the merge sort, recursive function which will split
+// until it hits an array of size one, then call merge as it goes back up
+void mergeSplit(int destArray[], int originArray[], int begin, int end)
+{
+	// Check if split down to 1, in which case "sorted"
+	if (end - begin <= 1)
+	{
+		return;
+	}
+
+	// Split recursion
+	int middle = (end + begin) / 2;
+	mergeSplit(destArray, originArray, begin, middle);
+	mergeSplit(destArray, originArray, middle, end);
+
+	// Merge
+	merge(destArray, originArray, begin, middle, end);
+	
+	// Copy results back into origin array
+	copy(destArray, originArray, begin, end);
+}
+
+void merge(int destArray[], int originArray[], int begin, int middle, int end)
+{
+	int beginTemp = begin;
+	int middleTemp = middle;
+
+	// Go while there are elements left to go over
+	for (int i = begin; i < end; i++)
+	{
+		// If left array's current element is greater than or equal to rights current element, copy into appropriate location
+		if (beginTemp < middle && (middleTemp >= end || originArray[beginTemp] <= originArray[middleTemp]))
+		{
+			destArray[i] = originArray[beginTemp];
+			beginTemp++;
+		}
+		// If it wasn't larger, copy in the right one
+		else
+		{
+			destArray[i] = originArray[middleTemp];
+			middleTemp++;
+		}
+	}
+}
+
+// Moves the destArray back into the originArray now that it is sorted
+void copy(int destArray[], int originArray[], int begin, int end)
+{
+	for (int i = begin; i < end; i++)
+	{
+		originArray[i] = destArray[i];
+	}
 }

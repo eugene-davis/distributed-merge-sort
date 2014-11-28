@@ -15,7 +15,7 @@ using namespace std;
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
 
-#define debug
+//#define debug
 
 // Prototypes
 bool distribute(int data[], int dataSize);
