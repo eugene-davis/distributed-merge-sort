@@ -14,10 +14,14 @@ using namespace std;
 
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
+// Define the typical size - transmissions may be smaller
+#define SIZE 1024
+
+#define debug
 
 // Prototypes
 bool distribute(int data[], int dataSize);
-bool clientConnection();
+bool clientConnection(int data[], int start, int end);
 
 int main(int argc, char *argv[])
 {
@@ -143,23 +147,36 @@ bool distribute(int data[], int dataSize)
 		return false;
 	}
 
-	if (!clientConnection())
+	// Calculate partitions for data and kick off transmission
+	int partitionSize = dataSize / numMachines;
+	// Handles all but the final (potentially differently sized) connection
+	for (int i = 0; i < /*numMachines - 1*/1; i++)
+	{
+		if (!clientConnection(data, i * partitionSize, (i + 1) * partitionSize))
+		{
+			return false;
+		}
+	}
+
+	/*// Final connection, may not be as big as the others
+	if (!clientConnection(data, 19 * numMachines, dataSize)
 	{
 		return false;
-	}
+	}*/
+	
 
 	return true;
 }
 
 // Client specific function
-bool clientConnection()
+bool clientConnection(int data[], int start, int end)
 {
 	// Socket setup
 	int socket1;
 	struct sockaddr_in sock1Addr;
 	int connectionStatus;
 	char hostname[100] = "localhost"; // Temp, will be parameter soon
-	int dataNumbers = 800; // Temp, will be parameter soon
+	int dataNumbers = end - start;
 	char ip[100];
 	struct hostent *hostDetails; // Details returned by gethostby name
 	struct in_addr **addresses; // List of addresses contained in hostDetails
@@ -204,11 +221,46 @@ bool clientConnection()
 		perror("Error connecting to client");
 		return false;
 	}
+	
+	cout << dataNumbers << endl;
 
 	dataNumbers = htonl(dataNumbers);
 
 	// Send size of data
 	sendStatus = send(socket1, (char *) &dataNumbers, sizeof(int), flags);
+
+	if (sendStatus < 0)
+	{
+		perror("Error sending data size");
+		return false;
+	}
+
+	#ifdef debug
+	// debug by writing to file what is being sent, so it can be compared to client
+	ofstream testFile;
+	testFile.open("testServerList", ofstream::out | ofstream::trunc);
+	for (int i = start; i < end; i++)
+	{
+		testFile << data[i] << endl;
+	}
+	#endif
+	int size = (end - start) * sizeof(int);
+	char *buff = new char[size];
+
+	// Send data
+	int currentData = 0;
+	for (int i = start; i < end; i++)
+	{
+		currentData = htonl(data[i]);
+		sendStatus = send(socket1, (char *) &currentData, sizeof(int), flags);
+
+		if (sendStatus < 0)
+		{
+			perror("Error sending data size");
+			return false;
+		}
+	}
+	close(socket1);
 
 	return true;
 }

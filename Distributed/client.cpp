@@ -7,11 +7,17 @@
 #include <errno.h>
 #include <netdb.h>
 #include <fstream>
+#include <string.h>
 
 using namespace std;
 
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
+
+// Define typical packet size (can be smaller)
+#define SIZE 1024
+
+#define debug
 
 int main()
 {
@@ -24,6 +30,7 @@ int main()
 	int rcvStatus;
 	int totalNumbers = 0; // Number of integers to be recieved to sort
 	socklen_t serverAddrLen;
+	int *data;
 	
 	// Get hostname
 	gethostname(localHostname, sizeof(localHostname));
@@ -76,12 +83,33 @@ int main()
 
 	// Recieve the total number of ints which will be sent here, recieve into an int (thus cast to char)
 	rcvStatus = recv(socketConnection, (char *) &totalNumbers, sizeof(int), 0);
+	if (rcvStatus < 0)
+	{
+		perror("Error recieving data");
+		return -1;
+	}
 
 	totalNumbers = ntohl(totalNumbers);
-	
-	cout << "Recieved number as " << totalNumbers << endl;
 
-	close(socketConnection);
+	data = new int[totalNumbers];
+
+	int currentData = 0;
+	for (int i = 0; i < totalNumbers; i++)
+	{
+		rcvStatus = recv(socketConnection, (char *) &currentData, sizeof(int), 0);
+		data[i] = ntohl(currentData);
+	}
+
+
+	#ifdef debug
+	// debug by writing to file what is being recieved, so it can be compared to client
+	ofstream testFile;
+	testFile.open("testClientList", ofstream::out | ofstream::trunc);
+	for (int i = 0; i < totalNumbers; i++)
+	{
+		testFile << data[i] << endl;
+	}
+	#endif
 
 	return 0;
 }
