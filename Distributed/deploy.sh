@@ -5,5 +5,6 @@ clientList="ClientList.conf"
 
 while read host 
 do
-	ssh emd0003@$host ~/Project_Live/Distributed/client
+	echo "Deploying client to $host"
+	ssh emd0003@$host ~/Live_Project/Distributed/client_emd0003 &
 done < $clientList
