@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 		while (j > 0 && data[j - 1] > x)
 		{
 			data[j] = data[j - 1];
-			j = = j - 1;
+			j = j - 1;
 		}
 		data[j] = x;
 	}
