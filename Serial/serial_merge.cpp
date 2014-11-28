@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
 	if (dataSize < 50000000 || dataSize > 140000000)
 	{
 		cout << "The data size indicated by the file is out of range." << endl;
+		return 0;
 	}
 
 	// Setup array to hold data
@@ -65,13 +66,15 @@ int main(int argc, char *argv[])
 
 	// Progress the dataFile by one more line to hit end of file (assuming valid file)
 	dataFile.ignore(10000000000000, '\n');
+	dataFile.ignore(10000000000000, '\n');
 
 	// Verify that the data grabbed is the same amount as dataSize indicated
 	// and that the end of file has been reached - i.e. make sure the data
 	// file given was valid
 	if (currentData != dataSize || !dataFile.eof())
 	{
-		cout << "The data size did not match the first line of the file, suggesting the input file was invalid or corrupted." << endl;
+		cout << "The data size did not match the size specified by the descriptor, suggesting that the input file was invalid or corrupted." << endl;
+		return 0;
 	}
 
 
