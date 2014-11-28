@@ -9,17 +9,31 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <errno.h>
+#include <pthread.h>
 
 using namespace std;
 
 // Random, high port to reduce likelihood of colliding
 #define PORT 6862
 
+// Number of clients
+#define NUM_MACHINES 20
+
 //#define debug
+
+struct arguments
+{
+	
+	int *data;
+	string hostName;
+	int start;
+	int end;
+};
 
 // Prototypes
 bool distribute(int data[], int dataSize);
-bool clientConnection(int data[], int start, int end);
+//bool clientConnection(int data[], int start, int end);
+void* clientConnection(void *argsP);
 
 int main(int argc, char *argv[])
 {
@@ -89,11 +103,25 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-
 	// Distribute data to clients
 	if (!distribute(data, dataSize))
 	{
+		cout << "Problems encountered while distributing data to clients." << endl;
 		return 1;
+	}
+	
+	// Final merging. Use insertion sort, since 20 isn't a power of two (thus no clean merge sort option), and insertion sort is relatively effective on partially sorted lists
+	int x = 0;
+	for (int i = 0; i < dataSize; i++)
+	{
+		x = data[i];
+		int j = i;
+		while (j > 0 && data[j - 1] > x)
+		{
+			data[j] = data[j - 1];
+			j = = j - 1;
+		}
+		data[j] = x;
 	}
 
 	// Output array
@@ -118,7 +146,8 @@ int main(int argc, char *argv[])
 // Distributes packages to clients
 bool distribute(int data[], int dataSize)
 {
-	int numMachines = 20;
+	int numMachines = NUM_MACHINES;
+	arguments* args;
 	string hostNames[20];
 
 	// Read in client list from configuration file
@@ -145,50 +174,67 @@ bool distribute(int data[], int dataSize)
 		return false;
 	}
 
+	pthread_t clients[NUM_MACHINES];
+
 	// Calculate partitions for data and kick off transmission
 	int partitionSize = dataSize / numMachines;
 	// Handles all but the final (potentially differently sized) connection
-	for (int i = 0; i < /*numMachines - 1*/1; i++)
+	for (int i = 0; i < numMachines - 1; i++)
 	{
-		if (!clientConnection(data, i * partitionSize, (i + 1) * partitionSize))
-		{
-			return false;
-		}
+		args->data = data;
+		args->hostName = hostNames[i];
+		args->start = (i * partitionSize);
+		args->end = (i + 1) * partitionSize;
+		pthread_create(&clients[i], NULL, clientConnection, args);
 	}
 
-	/*// Final connection, may not be as big as the others
-	if (!clientConnection(data, 19 * numMachines, dataSize)
+	// Final connection, may not be as big as the others
+
+	args->data = data;
+	args->hostName = hostNames[19];
+	args->start = (19 * partitionSize);
+	args->end = dataSize;
+	pthread_create(&clients[19], NULL, clientConnection, args);
+
+	// Wait for clients to complete
+	for (int i = 0; i < NUM_MACHINES; i++)
 	{
-		return false;
-	}*/
-	
+		pthread_join(clients[i], NULL);
+	}
 
 	return true;
 }
 
 // Client specific function
-bool clientConnection(int data[], int start, int end)
+//bool clientConnection(int data[], int start, int end)
+void* clientConnection(void *argsP)
 {
+	arguments args = *((arguments*)argsP);
+
 	// Socket setup
 	int socket1;
 	struct sockaddr_in sock1Addr;
 	int connectionStatus;
-	char hostname[100] = "localhost"; // Temp, will be parameter soon
-	int dataNumbers = end - start;
+
+
+	int dataNumbers = args.end - args.start;
+	int start = args.start;
+	int end = args.end;
 	char ip[100];
 	struct hostent *hostDetails; // Details returned by gethostby name
 	struct in_addr **addresses; // List of addresses contained in hostDetails
 	int flags = 0;
 	int sendStatus, rcvStatus;
+	int *data;
+	data = args.data;
 
 	// Get hostname
-	hostDetails = gethostbyname(hostname);
+	hostDetails = gethostbyname(args.hostName.c_str());
 
 	// Check that hostname was successfully returned
 	if (hostDetails == NULL)
 	{
-		cout << "Unable to retrieve IP address for hostname " << hostname << endl;
-		return false;
+		cout << "Unable to retrieve IP address for hostname " << args.hostName << endl;
 	}
 
 	addresses = (struct in_addr **) hostDetails->h_addr_list;
@@ -204,7 +250,6 @@ bool clientConnection(int data[], int start, int end)
 	if (socket1 < 0)
 	{
 		perror("Error opening socket");
-		return false;
 	}
 
 	sock1Addr.sin_family = AF_INET;
@@ -217,7 +262,6 @@ bool clientConnection(int data[], int start, int end)
 	if (connectionStatus < 0)
 	{
 		perror("Error connecting to client");
-		return false;
 	}
 
 	dataNumbers = htonl(dataNumbers);
@@ -228,7 +272,6 @@ bool clientConnection(int data[], int start, int end)
 	if (sendStatus < 0)
 	{
 		perror("Error sending data size");
-		return false;
 	}
 
 	#ifdef debug
@@ -255,7 +298,6 @@ bool clientConnection(int data[], int start, int end)
 		if (sendStatus < 0)
 		{
 			perror("Error sending data");
-			return false;
 		}
 	}
 
@@ -280,5 +322,4 @@ bool clientConnection(int data[], int start, int end)
 
 	close(socket1);
 
-	return true;
 }
