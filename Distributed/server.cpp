@@ -1,11 +1,23 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <errno.h>
 
 using namespace std;
 
+// Random, high port to reduce likelihood of colliding
+#define PORT 6862
+
 // Prototypes
 bool distribute(int data[], int dataSize);
+bool clientConnection();
 
 int main(int argc, char *argv[])
 {
@@ -131,6 +143,70 @@ bool distribute(int data[], int dataSize)
 		return false;
 	}
 
+	if (!clientConnection())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+// Client specific function
+bool clientConnection()
+{
+	// Socket setup
+	int socket1;
+	struct sockaddr_in sock1Addr;
+	int connectionStatus;
+	char hostname[100] = "localhost"; // Temp, will be parameter soon
+	int dataNumbers = htonl(8); // Temp, will be parameter soon
+	char ip[100];
+	struct hostent *hostDetails; // Details returned by gethostby name
+	struct in_addr **addresses; // List of addresses contained in hostDetails
+	int flags;
+	int sendStatus;
+
+	// Get hostname
+	hostDetails = gethostbyname(hostname);
+
+	// Check that hostname was successfully returned
+	if (hostDetails == NULL)
+	{
+		cout << "Unable to retrieve IP address for hostname " << hostname << endl;
+		return false;
+	}
+
+	addresses = (struct in_addr **) hostDetails->h_addr_list;
+	
+	// Get first of the valid addresses
+	for (int i = 0; addresses[i] != NULL; i++)
+	{
+		strcpy(ip, inet_ntoa(*addresses[i]));
+	}
+
+	socket1 = socket(AF_INET, SOCK_STREAM, 0);
+
+	if (socket1 < 0)
+	{
+		perror("Error opening socket");
+		return false;
+	}
+
+	sock1Addr.sin_family = AF_INET;
+	sock1Addr.sin_port = htons((u_short) PORT);
+	sock1Addr.sin_addr.s_addr = inet_addr(ip);
+
+
+	connectionStatus = connect(socket1, (struct sockaddr *) &sock1Addr, sizeof(struct sockaddr_in));
+
+	if (connectionStatus < 0)
+	{
+		perror("Error connecting to client");
+		return false;
+	}
+
+	// Send size of data
+	sendStatus = send(socket1, (char *) dataNumbers, sizeof(int), flags);
 
 	return true;
 }
