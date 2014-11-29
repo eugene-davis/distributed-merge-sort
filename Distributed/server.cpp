@@ -216,6 +216,7 @@ void* clientConnection(void *argsP)
 	struct sockaddr_in sock1Addr;
 	int connectionStatus;
 
+	string errorMsg;
 
 	int dataNumbers = args.end - args.start;
 	int start = args.start;
@@ -261,7 +262,8 @@ void* clientConnection(void *argsP)
 
 	if (connectionStatus < 0)
 	{
-		perror("Error connecting to client");
+		errorMsg = "Error connecting to client " + args.hostName;
+		perror(errorMsg.c_str());
 	}
 
 	dataNumbers = htonl(dataNumbers);
@@ -271,7 +273,8 @@ void* clientConnection(void *argsP)
 
 	if (sendStatus < 0)
 	{
-		perror("Error sending data size");
+		errorMsg = "Error sending data size to " + args.hostName;
+		perror(errorMsg.c_str());
 	}
 
 	#ifdef debug
@@ -297,7 +300,8 @@ void* clientConnection(void *argsP)
 
 		if (sendStatus < 0)
 		{
-			perror("Error sending data (server)");
+			errorMsg = "Error sending data to " + args.hostName;
+			perror(errorMsg.c_str());
 		}
 	}
 
