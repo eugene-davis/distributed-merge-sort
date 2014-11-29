@@ -217,6 +217,8 @@ bool distribute(int data[], int dataSize)
 		pthread_join(clients[i], NULL);
 	}
 
+	cout << "All clients have returned data." << endl;
+
 	return true;
 }
 
