@@ -320,6 +320,6 @@ void* clientConnection(void *argsP)
 	testFile.close();
 	#endif
 
-	close(socket1);
+	//close(socket1);
 
 }
