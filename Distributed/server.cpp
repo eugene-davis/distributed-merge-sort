@@ -1,3 +1,12 @@
+// Eugene Davis
+// CPE 435 Project
+// Distributed Portion - Server
+// To run, first deploy all twenty clients based on the configuration file of
+// client names. To do this quickly, the deploy.sh script may be used.
+// Then run the command:
+// server data_file_name
+
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -48,7 +57,7 @@ int main(int argc, char *argv[])
 	if (argc != 2)
 	{
 		cout << "Incorrect usauge. Correct invocation is: " << endl;
-		cout << "serial_merge input_file_name" << endl;
+		cout << "server input_file_name" << endl;
 		return 0;
 	}
 

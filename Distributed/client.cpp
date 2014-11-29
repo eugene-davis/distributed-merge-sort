@@ -1,3 +1,10 @@
+// Eugene Davis
+// CPE 435 Project
+// Distributed Portion - Client
+// To run, simply run the client. Since the server
+// is push, it will listed for a connection to it from
+// the server, and work with it once connected
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
