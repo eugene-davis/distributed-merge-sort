@@ -21,6 +21,7 @@ using namespace std;
 
 //#define debug
 
+// Arguments for threads to talk to clients
 struct arguments
 {
 	
@@ -267,7 +268,6 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 }
 
 // Client specific function
-//bool clientConnection(int data[], int start, int end)
 void* clientConnection(void *argsP)
 {
 	arguments args = *((arguments*)argsP);
