@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 bool distribute(int data[], int dataSize)
 {
 	int numMachines = NUM_MACHINES;
-	arguments* args;
+	arguments* args = new arguments;
 	string hostNames[20];
 
 	// Read in client list from configuration file
