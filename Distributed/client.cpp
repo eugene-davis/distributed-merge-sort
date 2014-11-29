@@ -137,7 +137,7 @@ int main()
 			perror("Error sending data (client)");
 			return false;
 		}
-		usleep(100); // Short delay to avoid causing overload of client
+		usleep(1); // Short delay to avoid causing overload of server
 	}
 
 	return 0;

@@ -187,6 +187,11 @@ bool distribute(int data[], int dataSize)
 		args->hostName = hostNames[i];
 		args->start = (i * partitionSize);
 		args->end = (i + 1) * partitionSize;
+
+		pthread_mutex_lock(&mutex);
+		cout << "Launching thread for client " << clients[i] << endl;
+		pthread_mutex_unlock(&mutex);
+
 		pthread_create(&clients[i], NULL, clientConnection, args);
 	}
 
@@ -196,7 +201,13 @@ bool distribute(int data[], int dataSize)
 	args->hostName = hostNames[19];
 	args->start = (19 * partitionSize);
 	args->end = dataSize;
+
+	pthread_mutex_lock(&mutex);
+	cout << "Launching thread for client " << clients[19] << endl;
+	pthread_mutex_unlock(&mutex);
+
 	pthread_create(&clients[19], NULL, clientConnection, args);
+	
 
 	// Wait for clients to complete
 	for (int i = 0; i < NUM_MACHINES; i++)
@@ -317,7 +328,7 @@ void* clientConnection(void *argsP)
 			errorMsg = "Error sending data to " + args.hostName;
 			perror(errorMsg.c_str());
 		}
-		usleep(100); // Short delay to avoid causing overload of client
+		usleep(1); // Short delay to avoid causing overload of client
 	}
 
 	pthread_mutex_lock(&mutex);
