@@ -189,7 +189,7 @@ bool distribute(int data[], int dataSize)
 		args->end = (i + 1) * partitionSize;
 
 		pthread_mutex_lock(&mutex);
-		cout << "Launching thread for client " << clients[i] << endl;
+		cout << "Launching thread for client " << hostNames[i] << endl;
 		pthread_mutex_unlock(&mutex);
 
 		pthread_create(&clients[i], NULL, clientConnection, args);
@@ -203,7 +203,7 @@ bool distribute(int data[], int dataSize)
 	args->end = dataSize;
 
 	pthread_mutex_lock(&mutex);
-	cout << "Launching thread for client " << clients[19] << endl;
+	cout << "Launching thread for client " << hostNames[19] << endl;
 	pthread_mutex_unlock(&mutex);
 
 	pthread_create(&clients[19], NULL, clientConnection, args);
