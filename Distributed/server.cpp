@@ -224,7 +224,7 @@ bool distribute(int data[], int outData[], int dataSize)
 // Writes everything to first array  meaning first array may change in size
 void merge(int first[], int firstStart, int firstEnd, int second[], int secondStart, int secondEnd)
 {
-	/*// Make a temp array that is the size of both arrays
+	// Make a temp array that is the size of both arrays
 	int firstLength = firstEnd - firstStart;
 	int secondLength = secondEnd - secondStart;
 	int* temp = new int[firstLength + secondLength];
@@ -262,7 +262,7 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 
 	// Now that merging is complete, delete old first value, and reassigning to temp
 	delete first;
-	first = temp;*/
+	first = temp;
 }
 
 // Client specific function
@@ -404,6 +404,6 @@ void* clientConnection(void *argsP)
 	testFile.close();
 	#endif
 
-	//close(socket1);
+	close(socket1);
 
 }
