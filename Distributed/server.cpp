@@ -212,7 +212,7 @@ bool distribute(int data[], int outData[], int dataSize)
 	outData = new int[dataSize];
 	memcpy(&outData, &data, sizeof(int) * partitionSize); // Get first partition into outData
 	// Merge
-	for (int i = 0; i < NUM_MACHINES; i++)
+	for (int i = 0; i < NUM_MACHINES - 1; i++)
 	{
 		merge(outData, 0, allArgs[i].end, data, allArgs[i+1].start, allArgs[i+1].end);
 	}
@@ -229,7 +229,7 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 	int secondLength = secondEnd - secondStart;
 	int* temp = new int[firstLength + secondLength];
 
-	int i = 0, j = 0, k = 0;
+	int i = firstStart, j = secondStart, k = 0;
 
 	while (i < firstLength && j < secondLength)
 	{
@@ -260,7 +260,7 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 		k++;
 	}
 
-	// Now that merging is complete, delete old first value, and reassing to temp
+	// Now that merging is complete, delete old first value, and reassigning to temp
 	delete first;
 	first = temp;
 }
