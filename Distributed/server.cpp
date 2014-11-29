@@ -260,9 +260,10 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 		k++;
 	}
 
-	// Now that merging is complete, delete old first value, and reassigning to temp
-	delete first;
-	first = temp;
+	// Now that merging is complete, copy temp into first for output
+	memcpy(first, temp, sizeof(int) * (firstLength + secondLength));
+	delete temp;
+	
 }
 
 // Client specific function
