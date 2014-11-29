@@ -229,18 +229,18 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 	int secondLength = secondEnd - secondStart;
 	int* temp = new int[firstLength + secondLength];
 
-	int i = firstStart, j = secondStart, k = 0;
+	int i = 0, j = 0, k = 0;
 
 	while (i < firstLength && j < secondLength)
 	{
-		if (first[i] < second[j])
+		if (first[i + firstStart] < second[j + secondStart])
 		{
-			temp[k] = first[i];
+			temp[k] = first[i + firstStart];
 			i++;
 		}
 		else
 		{
-			temp[k] = second[j];
+			temp[k] = second[j + secondStart];
 			j++;
 		}
 		k++;
@@ -248,14 +248,14 @@ void merge(int first[], int firstStart, int firstEnd, int second[], int secondSt
 
 	while (i < firstLength)
 	{
-		temp[k] = first[i];
+		temp[k] = first[i + firstStart];
 		i++;
 		k++;
 	}
 
 	while (j < secondLength)
 	{
-		temp[k] = second[j];
+		temp[k] = second[j + secondStart];
 		j++;
 		k++;
 	}
