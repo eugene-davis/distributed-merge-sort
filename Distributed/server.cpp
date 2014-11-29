@@ -84,7 +84,8 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	// Setup array to hold data
+	// Setup array to hold data, and one for output
+	outData = new int[dataSize];
 	data = new int[dataSize];
 
 	// Start reading in data
@@ -209,7 +210,6 @@ bool distribute(int data[], int outData[], int dataSize)
 	cout << "All clients have returned data." << endl;
 
 	// Prepare array for output
-	outData = new int[dataSize];
 	memcpy(outData, data, sizeof(int) * partitionSize); // Get first partition into outData
 	// Merge
 	for (int i = 0; i < NUM_MACHINES - 1; i++)
