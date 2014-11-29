@@ -212,7 +212,7 @@ bool distribute(int data[], int outData[], int dataSize)
 	outData = new int[dataSize];
 	memcpy(&outData, &data, sizeof(int) * partitionSize); // Get first partition into outData
 	// Merge
-	for (int i = 0; i < NUM_MACHINES - 1; i++)
+	for (int i = 0; i < NUM_MACHINES; i++)
 	{
 		merge(outData, 0, allArgs[i].end, data, allArgs[i+1].start, allArgs[i+1].end);
 	}
@@ -375,7 +375,6 @@ void* clientConnection(void *argsP)
 			errorMsg = "Error sending data to " + args.hostName;
 			perror(errorMsg.c_str());
 		}
-		//usleep(1); // Short delay to avoid causing overload of client
 	}
 
 	pthread_mutex_lock(&mutex);
