@@ -35,6 +35,8 @@ bool distribute(int data[], int dataSize);
 //bool clientConnection(int data[], int start, int end);
 void* clientConnection(void *argsP);
 
+pthread_mutex_t mutex;
+
 int main(int argc, char *argv[])
 {
 	int dataSize = 0;
@@ -235,7 +237,9 @@ void* clientConnection(void *argsP)
 	// Check that hostname was successfully returned
 	if (hostDetails == NULL)
 	{
+		pthread_mutex_lock(&mutex);
 		cout << "Unable to retrieve IP address for hostname " << args.hostName << endl;
+		pthread_mutex_unlock(&mutex);
 	}
 
 	addresses = (struct in_addr **) hostDetails->h_addr_list;
@@ -250,7 +254,9 @@ void* clientConnection(void *argsP)
 
 	if (socket1 < 0)
 	{
+		pthread_mutex_lock(&mutex);
 		perror("Error opening socket");
+		pthread_mutex_unlock(&mutex);
 	}
 
 	sock1Addr.sin_family = AF_INET;
@@ -263,10 +269,16 @@ void* clientConnection(void *argsP)
 	if (connectionStatus < 0)
 	{
 		errorMsg = "Error connecting to client " + args.hostName;
+		pthread_mutex_lock(&mutex);
 		perror(errorMsg.c_str());
+		pthread_mutex_unlock(&mutex);
 	}
 
 	dataNumbers = htonl(dataNumbers);
+
+	pthread_mutex_lock(&mutex);
+	cout << "Beginning data transmission to " << args.hostName << endl;
+	pthread_mutex_unlock(&mutex);
 
 	// Send size of data
 	sendStatus = send(socket1, (char *) &dataNumbers, sizeof(int), flags);
@@ -274,7 +286,9 @@ void* clientConnection(void *argsP)
 	if (sendStatus < 0)
 	{
 		errorMsg = "Error sending data size to " + args.hostName;
+		pthread_mutex_lock(&mutex);
 		perror(errorMsg.c_str());
+		pthread_mutex_unlock(&mutex);
 	}
 
 	#ifdef debug
@@ -305,6 +319,9 @@ void* clientConnection(void *argsP)
 		}
 	}
 
+	pthread_mutex_lock(&mutex);
+	cout << "Completed sending data to " + args.hostName << endl << "Waiting for data from client." << endl << endl;
+	pthread_mutex_unlock(&mutex);
 
 	// Recieve sorted data
 	currentData = 0;

@@ -117,7 +117,9 @@ int main()
 	// Perform merge sort
 	int* tempArray = new int[totalNumbers];
 
+	cout << "Beginning merge sort" << endl;
 	mergeSplit(tempArray, data, 0, totalNumbers);
+	cout << "Completed merge sort on partition. Sending data back." << endl;
 	
 
 
@@ -134,6 +136,7 @@ int main()
 			return false;
 		}
 	}
+
 
 	return 0;
 }
