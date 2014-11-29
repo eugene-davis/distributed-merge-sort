@@ -38,6 +38,8 @@ int main()
 	// Get hostname
 	gethostname(localHostname, sizeof(localHostname));
 
+	cout << "Client on " << localHostname << " has started." << endl;
+
 	// Check that hostname was successfully returned
 	if (localHostname == NULL)
 	{
@@ -136,7 +138,6 @@ int main()
 			return false;
 		}
 	}
-
 
 	return 0;
 }
