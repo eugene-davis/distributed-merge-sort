@@ -317,6 +317,7 @@ void* clientConnection(void *argsP)
 			errorMsg = "Error sending data to " + args.hostName;
 			perror(errorMsg.c_str());
 		}
+		usleep(100); // Short delay to avoid causing overload of client
 	}
 
 	pthread_mutex_lock(&mutex);
