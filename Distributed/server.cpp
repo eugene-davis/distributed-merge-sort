@@ -31,15 +31,17 @@ struct arguments
 };
 
 // Prototypes
-bool distribute(int data[], int dataSize);
-//bool clientConnection(int data[], int start, int end);
+bool distribute(int data[], int outData[], int dataSize);
 void* clientConnection(void *argsP);
+void merge(int first[], int firstStart, int firstEnd, int second[], int secondStart, int secondEnd);
 
 pthread_mutex_t mutex;
 
 int main(int argc, char *argv[])
 {
 	int dataSize = 0;
+	int* data;
+	int* outData;
 
 	// Parse commandline argument
 	if (argc != 2)
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Setup array to hold data
-	int* data = new int[dataSize];
+	data = new int[dataSize];
 
 	// Start reading in data
 	int currentData;
@@ -106,25 +108,12 @@ int main(int argc, char *argv[])
 	}
 
 	// Distribute data to clients
-	if (!distribute(data, dataSize))
+	if (!distribute(data, outData, dataSize))
 	{
 		cout << "Problems encountered while distributing data to clients." << endl;
 		return 1;
 	}
 	
-	// Final merging. Use insertion sort, since 20 isn't a power of two (thus no clean merge sort option), and insertion sort is relatively effective on partially sorted lists
-	int x = 0;
-	for (int i = 0; i < dataSize; i++)
-	{
-		x = data[i];
-		int j = i;
-		while (j > 0 && data[j - 1] > x)
-		{
-			data[j] = data[j - 1];
-			j = j - 1;
-		}
-		data[j] = x;
-	}
 
 	// Output array
 	ofstream outputFile;
@@ -140,13 +129,13 @@ int main(int argc, char *argv[])
 	// Write to file
 	for (int i = 0; i < dataSize; i++)
     {
-    	outputFile << data[i] << endl;
+    	outputFile << outData[i] << endl;
     }
 
 }
 
 // Distributes packages to clients
-bool distribute(int data[], int dataSize)
+bool distribute(int data[], int outData[], int dataSize)
 {
 	int numMachines = NUM_MACHINES;
 	arguments allArgs[20];
@@ -219,7 +208,61 @@ bool distribute(int data[], int dataSize)
 
 	cout << "All clients have returned data." << endl;
 
+	// Prepare array for output
+	outData = new int[dataSize];
+	memcpy(&outData, &data, sizeof(int) * partitionSize); // Get first partition into outData
+	// Merge
+	for (int i = 0; i < NUM_MACHINES; i++)
+	{
+		merge(outData, 0, allArgs[i].end, data, allArgs[i+1].start, allArgs[i+1].end);
+	}
+
 	return true;
+}
+
+// Merges the array specified in the first array with the array specified in the second array.
+// Writes everything to first array  meaning first array may change in size
+void merge(int first[], int firstStart, int firstEnd, int second[], int secondStart, int secondEnd)
+{
+	// Make a temp array that is the size of both arrays
+	int firstLength = firstEnd - firstStart;
+	int secondLength = secondEnd - secondStart;
+	int* temp = new int[firstLength + secondLength];
+
+	int i = 0, j = 0, k = 0;
+
+	while (i < firstLength && j < secondLength)
+	{
+		if (first[i] < second[j])
+		{
+			temp[k] = first[i];
+			i++;
+		}
+		else
+		{
+			temp[k] = second[j];
+			j++;
+		}
+		k++;
+	}
+
+	while (i < firstLength)
+	{
+		temp[k] = first[i];
+		i++;
+		k++;
+	}
+
+	while (j < secondLength)
+	{
+		temp[k] = second[j];
+		j++;
+		k++;
+	}
+
+	// Now that merging is complete, delete old first value, and reassing to temp
+	delete first;
+	first = temp;
 }
 
 // Client specific function
