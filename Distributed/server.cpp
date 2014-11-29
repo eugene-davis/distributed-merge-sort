@@ -345,6 +345,10 @@ void* clientConnection(void *argsP)
 		data[i] = ntohl(currentData);
 	}
 
+	pthread_mutex_lock(&mutex);
+	cout << "Completed recieving sorted data from " + args.hostName << endl << endl;
+	pthread_mutex_unlock(&mutex);
+
 	#ifdef debug
 	// debug by writing to file what is being recieved, so it can be compared to client
 	testFile.open("testServerRecieveList", ofstream::out | ofstream::trunc);
