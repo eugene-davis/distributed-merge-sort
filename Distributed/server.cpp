@@ -30,6 +30,11 @@ using namespace std;
 
 //#define debug
 
+// Overwrites the source file for data rather than creating a new one
+// Allows you to get around the block limit - but prevents comparisions
+// on the server
+#define overWriteSource
+
 // Arguments for threads to talk to clients
 struct arguments
 {
@@ -129,7 +134,13 @@ int main(int argc, char *argv[])
 	// Output array
 	ofstream outputFile;
 	string outputFileName(argv[1]);
+
+	// If overWriteSource is not defined, then prepend "sorted_" to avoid overwriting the
+	// source data file. Otherwise, overwrite it.
+	#ifndef overWriteSource
 	outputFileName = "sorted_" + outputFileName;
+	#endif
+
 	outputFile.open(outputFileName.c_str(), ofstream::out | ofstream::trunc);
 	if (!outputFile.is_open())
 	{
