@@ -210,9 +210,9 @@ bool distribute(int data[], int outData[], int dataSize)
 
 	// Prepare array for output
 	outData = new int[dataSize];
-	memcpy(&outData, &data, sizeof(int) * partitionSize); // Get first partition into outData
+	memcpy(outData, data, sizeof(int) * partitionSize); // Get first partition into outData
 	// Merge
-	for (int i = 0; i < NUM_MACHINES; i++)
+	for (int i = 0; i < NUM_MACHINES - 1; i++)
 	{
 		merge(outData, 0, allArgs[i].end, data, allArgs[i+1].start, allArgs[i+1].end);
 	}

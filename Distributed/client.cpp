@@ -137,10 +137,11 @@ int main()
 			perror("Error sending data (client)");
 			return false;
 		}
-		//usleep(1); // Short delay to avoid causing overload of server
 	}
 
 	cout << "Completed sending of data." << endl;
+
+	close(socketConnection);
 
 	return 0;
 }
