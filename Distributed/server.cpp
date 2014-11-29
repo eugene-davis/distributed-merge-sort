@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 bool distribute(int data[], int dataSize)
 {
 	int numMachines = NUM_MACHINES;
-	arguments* args = new arguments;
+	arguments allArgs[20];
 	string hostNames[20];
 
 	// Read in client list from configuration file
@@ -180,9 +180,11 @@ bool distribute(int data[], int dataSize)
 
 	// Calculate partitions for data and kick off transmission
 	int partitionSize = dataSize / numMachines;
+	arguments* args;
 	// Handles all but the final (potentially differently sized) connection
 	for (int i = 0; i < numMachines - 1; i++)
 	{
+		args = &allArgs[i];
 		args->data = data;
 		args->hostName = hostNames[i];
 		args->start = (i * partitionSize);
@@ -196,7 +198,7 @@ bool distribute(int data[], int dataSize)
 	}
 
 	// Final connection, may not be as big as the others
-
+	args = &allArgs[19];
 	args->data = data;
 	args->hostName = hostNames[19];
 	args->start = (19 * partitionSize);
