@@ -297,7 +297,7 @@ void* clientConnection(void *argsP)
 
 		if (sendStatus < 0)
 		{
-			perror("Error sending data");
+			perror("Error sending data (server)");
 		}
 	}
 

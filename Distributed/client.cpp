@@ -130,7 +130,7 @@ int main()
 
 		if (sendStatus < 0)
 		{
-			perror("Error sending data");
+			perror("Error sending data (client)");
 			return false;
 		}
 	}
