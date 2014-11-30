@@ -35,6 +35,9 @@ using namespace std;
 // on the server
 #define overWriteSource
 
+// If defined, turns on extra messages
+//#define chatty
+
 // Arguments for threads to talk to clients
 struct arguments
 {
@@ -201,9 +204,11 @@ bool distribute(int data[], int outData[], int dataSize)
 		args->start = (i * partitionSize);
 		args->end = (i + 1) * partitionSize;
 
+		#ifdef chatty
 		pthread_mutex_lock(&mutex);
 		cout << "Launching thread for client " << hostNames[i] << endl;
 		pthread_mutex_unlock(&mutex);
+		#endif
 
 		pthread_create(&clients[i], NULL, clientConnection, args);
 	}
@@ -215,9 +220,11 @@ bool distribute(int data[], int outData[], int dataSize)
 	args->start = (19 * partitionSize);
 	args->end = dataSize;
 
+	#ifdef chatty
 	pthread_mutex_lock(&mutex);
 	cout << "Launching thread for client " << hostNames[19] << endl;
 	pthread_mutex_unlock(&mutex);
+	#endif
 
 	pthread_create(&clients[19], NULL, clientConnection, args);
 	
@@ -228,7 +235,9 @@ bool distribute(int data[], int outData[], int dataSize)
 		pthread_join(clients[i], NULL);
 	}
 
+	#ifdef chatty
 	cout << "All clients have returned data." << endl;
+	#endif
 
 	// Prepare array for output
 	memcpy(outData, data, sizeof(int) * partitionSize); // Get first partition into outData
@@ -398,9 +407,11 @@ void* clientConnection(void *argsP)
 		}
 	}
 
+	#ifdef chatty
 	pthread_mutex_lock(&mutex);
 	cout << "Completed sending data to " + args.hostName << endl << "Waiting for data from client." << endl << endl;
 	pthread_mutex_unlock(&mutex);
+	#endif
 
 	// Recieve sorted data
 	currentData = 0;
@@ -410,9 +421,11 @@ void* clientConnection(void *argsP)
 		data[i] = ntohl(currentData);
 	}
 
+	#ifdef chatty
 	pthread_mutex_lock(&mutex);
 	cout << "Completed recieving sorted data from " + args.hostName << endl << endl;
 	pthread_mutex_unlock(&mutex);
+	#endif
 
 	#ifdef debug
 	// debug by writing to file what is being recieved, so it can be compared to client

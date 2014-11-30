@@ -29,6 +29,9 @@ void copy(int destArray[], int originArray[], int begin, int end);
 
 //#define debug
 
+// If defined, turns on extra messages
+//#define chatty
+
 // Arguments for threads in merge sort
 struct arguments
 {
@@ -57,7 +60,9 @@ int main()
 	// Get hostname
 	gethostname(localHostname, sizeof(localHostname));
 
+	#ifdef chatty
 	cout << "Client on " << localHostname << " has started." << endl;
+	#endif
 
 	// Check that hostname was successfully returned
 	if (localHostname == NULL)
@@ -146,9 +151,13 @@ int main()
 	args->rLevel = 0;
 	
 
+	#ifdef chatty
 	cout << "Beginning merge sort" << endl;
+	#endif
 	mergeSplit(args);
+	#ifdef chatty
 	cout << "Completed merge sort on partition. Sending data back." << endl;
+	#endif
 	
 
 
@@ -166,7 +175,9 @@ int main()
 		}
 	}
 
+	#ifdef chatty
 	cout << "Completed sending of data." << endl;
+	#endif
 
 	close(socketConnection);
 
