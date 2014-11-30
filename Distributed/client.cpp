@@ -214,7 +214,7 @@ void* mergeSplit(void *argsP)
 		int middle = (end + begin) / 2;
 
 		// Arguments for first child
-		arguments* args1;
+		arguments* args1 = new arguments;
 		args1->destArray = destArray;
 		args1->originArray = originArray;
 		args1->begin = begin;
@@ -222,7 +222,7 @@ void* mergeSplit(void *argsP)
 		args1->rLevel = rLevel;
 
 		// Arguments for second child
-		arguments* args2;
+		arguments* args2 = new arguments;
 		args2->destArray = destArray;
 		args2->originArray = originArray;
 		args2->begin = middle;
