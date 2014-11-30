@@ -9,7 +9,7 @@ projectDir="/home/student/emd0003/Live_Project"
 distributedTimes=$projectDir"/distributed_times"
 serialTimes=$projectDir"/serial_times"
 
-for dataSetSize 80000000 90000000 100000000 110000000 120000000 130000000 140000000
+for dataSetSize {80000000..10000000..140000000}
 
 	for i in 1 2 3 4 5
 	do
