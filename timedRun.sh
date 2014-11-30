@@ -2,7 +2,7 @@
 
 # Must be run on eb24621, from ~/Live_Project/
 
-dataSetSize=50000000
+dataSetSize=60000000
 dataSetName="data.dat"
 projectDir="/home/student/emd0003/Live_Project"
 
@@ -30,3 +30,6 @@ time ./serial_merge $dataSetName
 echo "Cleaning up data set files"
 cd $projectDir/gen_data
 rm *dat
+
+echo "Sleeping for 2 minutes to allow time for clients to release socket"
+sleep 2m
