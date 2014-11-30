@@ -5,7 +5,7 @@
 using namespace std;
 
 // Allows turning off of outputting to a file
-//#define outputFile
+//#define outputFileOptions
 
 // Prototypes for merge sort functions
 void mergeSplit(int destArray[], int originArray[], int begin, int end);
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
 	mergeSplit(tempArray, data, 0, dataSize);
 
-	#ifdef outputFile
+	#ifdef outputFileOptions
 	// Output array
 	ofstream outputFile;
 	string outputFileName(argv[1]);
