@@ -141,7 +141,7 @@ int main()
 	// Perform merge sort
 	int* tempArray = new int[totalNumbers];
 
-	arguments* args;
+	arguments* args = new arguments;
 	args->destArray = tempArray;
 	args->originArray = data;
 	args->begin = 0;
@@ -152,7 +152,9 @@ int main()
 	#ifdef chatty
 	cout << "Beginning merge sort" << endl;
 	#endif
+
 	mergeSplit(args);
+
 	#ifdef chatty
 	cout << "Completed merge sort on partition. Sending data back." << endl;
 	#endif
