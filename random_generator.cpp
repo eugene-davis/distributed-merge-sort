@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	// Setup file operations
 	ofstream dataFile;
 	// Open file for writing, and truncate it so any previous content is removed
-	dataFile.open(argv[2], ofstream::out | ofstream::trunc);
+	dataFile.open(argv[2], ofstream::out | ofstream::trunc | ofstream::binary);
 
 	if (!dataFile.is_open())
 	{

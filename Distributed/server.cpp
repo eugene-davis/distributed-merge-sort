@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
 	// Open the file
 	ifstream dataFile;
-	dataFile.open(argv[1]);
+	dataFile.open(argv[1], ifstream::binary);
 	
 	// Check if file opened correctly
 	if (!dataFile.is_open())
