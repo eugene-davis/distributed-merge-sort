@@ -31,7 +31,7 @@ using namespace std;
 //#define debug
 
 // Allows turning off of outputting to a file
-#define outputFileOption
+//#define outputFileOption
 
 // If defined, turns on extra messages
 //#define chatty
