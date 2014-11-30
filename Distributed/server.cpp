@@ -364,9 +364,11 @@ void* clientConnection(void *argsP)
 
 	dataNumbers = htonl(dataNumbers);
 
+	#ifdef chatty
 	pthread_mutex_lock(&mutex);
 	cout << "Beginning data transmission to " << args.hostName << endl;
 	pthread_mutex_unlock(&mutex);
+	#endif
 
 	// Send size of data
 	sendStatus = send(socket1, (char *) &dataNumbers, sizeof(int), flags);
