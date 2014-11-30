@@ -9,7 +9,7 @@ projectDir="/home/student/emd0003/Live_Project"
 #Deploy the clients first thing so they have time to launch
 echo "Deploying clients for distributed run"
 cd $projectDir/Distributed/
-bash deploy.sh >/dev/null
+bash deploy.sh 
 
 # Generated new data set
 echo "Generating random data set of size $dataSetSize"
