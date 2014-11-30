@@ -11,7 +11,8 @@ serialTimes=$projectDir"/serial_times"
 
 for dataSetSize in {80000000..10000000..140000000}
 do
-
+	echo "Data set size of $dataSetSize" >> $distributedTimes
+	echo "Data set size of $dataSetSize" >> $serialTimes
 	for i in 1 2 3 4 5
 	do
 
@@ -42,6 +43,10 @@ do
 
 		echo "Sleeping for 5 minutes to allow time for clients to release socket"
 		sleep 5m
+		echo >> $distributedTimes
+		echo >> $distributedTimes
+		echo >> $serialTimes
+		echo >> $serialTimes
 
 	done
 done
