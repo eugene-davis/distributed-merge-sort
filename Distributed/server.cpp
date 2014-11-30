@@ -349,8 +349,15 @@ void* clientConnection(void *argsP)
 	sock1Addr.sin_port = htons((u_short) PORT);
 	sock1Addr.sin_addr.s_addr = inet_addr(ip);
 
+	connectionStatus = -1; // Deliberately set to bad for retries
+	int failConnectCount = 0; // Tracks how many failures have occurred
 
-	connectionStatus = connect(socket1, (struct sockaddr *) &sock1Addr, sizeof(struct sockaddr_in));
+	// If fails to connect, try again a total of ten times, pausing in between each try for 10 microseconds
+	for (; failConnectCount < 10 && connectionStatus < 0; failConnectCount++)
+	{
+		connectionStatus = connect(socket1, (struct sockaddr *) &sock1Addr, sizeof(struct sockaddr_in));
+		usleep(10);
+	}	
 
 	if (connectionStatus < 0)
 	{
