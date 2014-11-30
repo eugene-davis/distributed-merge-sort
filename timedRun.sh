@@ -28,12 +28,12 @@ do
 		# Time run for distributed version
 		echo "Running distributed server"
 		cd $projectDir/Distributed/
-		time -o $distributedTimes -a ./server_emd0003 $dataSetName
+		/usr/bin/time -o $distributedTimes -a ./server_emd0003 $dataSetName
 
 		# Timed run for serial version
 		echo "Running serial version"
 		cd $projectDir/Serial/
-		time -o $serialTimes -a ./serial_merge $dataSetName
+		/usr/bin/time -o $serialTimes -a ./serial_merge $dataSetName
 
 		# Cleanup
 		echo "Cleaning up data set files"
