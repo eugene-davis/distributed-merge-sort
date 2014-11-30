@@ -60,9 +60,7 @@ int main()
 	// Get hostname
 	gethostname(localHostname, sizeof(localHostname));
 
-	#ifdef chatty
 	cout << "Client on " << localHostname << " has started." << endl;
-	#endif
 
 	// Check that hostname was successfully returned
 	if (localHostname == NULL)
