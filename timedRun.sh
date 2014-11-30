@@ -27,12 +27,12 @@ for dataSetSize {80000000..10000000..140000000}
 		# Time run for distributed version
 		echo "Running distributed server"
 		cd $projectDir/Distributed/
-		time ./server_emd0003 $dataSetName >> $distributedTimes
+		time -o -a $distributedTimes ./server_emd0003 $dataSetName
 
 		# Timed run for serial version
 		echo "Running serial version"
 		cd $projectDir/Serial/
-		time ./serial_merge $dataSetName >> $serialTimes
+		time -o -a $serialTimes ./serial_merge $dataSetName
 
 		# Cleanup
 		echo "Cleaning up data set files"
