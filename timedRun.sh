@@ -16,15 +16,15 @@ echo "Generating random data set of size $dataSetSize"
 cd $projectDir/gen_data
 ./random_generator $dataSetSize $dataSetName
 
-# Timed run for serial version
-echo "Running serial version"
-cd $projectDir/Serial/
-time ./serial_merge $dataSetName
-
 # Time run for distributed version
 echo "Running distributed server"
 cd $projectDir/Distributed/
 time ./server_emd0003 $dataSetName
+
+# Timed run for serial version
+echo "Running serial version"
+cd $projectDir/Serial/
+time ./serial_merge $dataSetName
 
 # Cleanup
 echo "Cleaning up data set files"
