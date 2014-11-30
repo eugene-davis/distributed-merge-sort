@@ -4,10 +4,8 @@
 
 using namespace std;
 
-// Overwrites the source file for data rather than creating a new one
-// Allows you to get around the block limit - but prevents comparisions
-// on the server
-#define overWriteSource
+// Allows turning off of outputting to a file
+//#define outputFile
 
 // Prototypes for merge sort functions
 void mergeSplit(int destArray[], int originArray[], int begin, int end);
@@ -91,13 +89,12 @@ int main(int argc, char *argv[])
 
 	mergeSplit(tempArray, data, 0, dataSize);
 
+	#ifdef outputFile
 	// Output array
 	ofstream outputFile;
 	string outputFileName(argv[1]);
 
-	#ifndef overWriteSource
 	outputFileName = "sorted_" + outputFileName;
-	#endif
 
 	outputFile.open(outputFileName.c_str(), ofstream::out | ofstream::trunc);
 	if (!outputFile.is_open())
@@ -108,10 +105,11 @@ int main(int argc, char *argv[])
 	
 	// Write to file
 	for (int i = 0; i < dataSize; i++)
-        {
-                outputFile << data[i] << endl;
-        }
+    {
+    	outputFile << data[i] << endl;
+    }
 
+	#endif
 }
 
 // The basic portion of the merge sort, recursive function which will split
