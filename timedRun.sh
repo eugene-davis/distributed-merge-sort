@@ -2,34 +2,45 @@
 
 # Must be run on eb24621, from ~/Live_Project/
 
-dataSetSize=60000000
+#dataSetSize=60000000
 dataSetName="data.dat"
 projectDir="/home/student/emd0003/Live_Project"
 
-#Deploy the clients first thing so they have time to launch
-echo "Deploying clients for distributed run"
-cd $projectDir/Distributed/
-bash deploy.sh 
+distributedTimes=$projectDir"/distributed_times"
+serialTimes=$projectDir"/serial_times"
 
-# Generated new data set
-echo "Generating random data set of size $dataSetSize"
-cd $projectDir/gen_data
-./random_generator $dataSetSize $dataSetName
+for dataSetSize 80000000 90000000 100000000 110000000 120000000 130000000 140000000
 
-# Time run for distributed version
-echo "Running distributed server"
-cd $projectDir/Distributed/
-time ./server_emd0003 $dataSetName
+	for i in 1 2 3 4 5
+	do
 
-# Timed run for serial version
-echo "Running serial version"
-cd $projectDir/Serial/
-time ./serial_merge $dataSetName
+		#Deploy the clients first thing so they have time to launch
+		echo "Deploying clients for distributed run"
+		cd $projectDir/Distributed/
+		bash deploy.sh 
 
-# Cleanup
-echo "Cleaning up data set files"
-cd $projectDir/gen_data
-rm *dat
+		# Generated new data set
+		echo "Generating random data set of size $dataSetSize"
+		cd $projectDir/gen_data
+		./random_generator $dataSetSize $dataSetName
 
-echo "Sleeping for 2 minutes to allow time for clients to release socket"
-sleep 2m
+		# Time run for distributed version
+		echo "Running distributed server"
+		cd $projectDir/Distributed/
+		time ./server_emd0003 $dataSetName >> $distributedTimes
+
+		# Timed run for serial version
+		echo "Running serial version"
+		cd $projectDir/Serial/
+		time ./serial_merge $dataSetName >> $serialTimes
+
+		# Cleanup
+		echo "Cleaning up data set files"
+		cd $projectDir/gen_data
+		rm *dat
+
+		echo "Sleeping for 5 minutes to allow time for clients to release socket"
+		sleep 5m
+
+	done
+done
