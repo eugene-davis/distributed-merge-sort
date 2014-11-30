@@ -31,7 +31,7 @@ using namespace std;
 //#define debug
 
 // Allows turning off of outputting to a file
-#define outputFile
+#define outputFileOption
 
 // If defined, turns on extra messages
 //#define chatty
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 	}
 	
 
-	#ifdef outputFile
+	#ifdef outputFileOption
 	// Output array
 	ofstream outputFile;
 	string outputFileName(argv[1]);
