@@ -18,6 +18,7 @@ cd $projectDir/gen_data
 ./random_generator $dataSetSize $dataSetName
 
 # Generate a control sort on the new data set
+echo "Generating control sort for the data"
 sort -n $dataSetName >> $controlSort
 
 # Run for distributed version
@@ -32,13 +33,17 @@ cd $projectDir/Serial/
 
 # Diff the control and my sorts
 cd $projectDir/gen_data
+echo "Diffing the serial sort result with the control sort"
 diff $controlSort $projectDir/Serial/sorted_$dataSetName
+echo "Diffing the distributed sort result with the control sort"
 diff $controlSort $projectDir/Distributed/sorted_$dataSetName
 
 # Cleanup
 echo "Cleaning up data set files"
 cd $projectDir/gen_data
 rm *dat
+rm $projectDir/Serial/sorted_$dataSetName
+rm $projectDir/Distributed/sorted_$dataSetName
 
 echo "Sleeping for 2 minutes to allow time for clients to release socket"
 sleep 2m
