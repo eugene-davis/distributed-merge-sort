@@ -2,6 +2,14 @@
 
 # Must be run on eb24621, from ~/Live_Project/
 
+if [ -z "$1" ]
+then
+	echo "No size given. Correct usage is:"
+	echo "bash runTest.sh size"
+	echo "Now exiting"
+	exit
+fi
+
 dataSetSize=$1
 dataSetName="data.dat"
 controlSort="sorted_control_$dataSetName"
