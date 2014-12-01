@@ -2,7 +2,7 @@
 
 # Must be run on eb24621, from ~/Live_Project/
 
-dataSetSize=50000000
+dataSetSize=$1
 dataSetName="data.dat"
 controlSort="sorted_control_$dataSetName"
 projectDir="/home/student/emd0003/Live_Project"
@@ -16,6 +16,9 @@ bash deploy.sh
 echo "Generating random data set of size $dataSetSize"
 cd $projectDir/gen_data
 ./random_generator $dataSetSize $dataSetName
+# Link out the data file
+ln -s $dataSetName $projectDir/Distributed/
+ln -s $dataSetName $projectDir/Serial/
 
 # Generate a control sort on the new data set
 echo "Generating control sort for the data"
