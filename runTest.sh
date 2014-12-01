@@ -19,6 +19,7 @@ cd $projectDir/gen_data
 
 # Generate a control sort on the new data set
 echo "Generating control sort for the data"
+rm $controlSort
 sort -n $dataSetName >> $controlSort
 
 # Run for distributed version
