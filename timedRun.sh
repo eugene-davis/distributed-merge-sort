@@ -9,7 +9,7 @@ projectDir="/home/student/emd0003/Live_Project"
 distributedTimes=$projectDir"/distributed_times"
 serialTimes=$projectDir"/serial_times"
 
-for dataSetSize in {80000000..10000000..140000000}
+for dataSetSize in 90000000 100000000 110000000 120000000 130000000 140000000
 do
 	echo "Data set size of $dataSetSize" >> $distributedTimes
 	echo "Data set size of $dataSetSize" >> $serialTimes
