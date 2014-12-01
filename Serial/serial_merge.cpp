@@ -5,7 +5,7 @@
 using namespace std;
 
 // Allows turning off of outputting to a file
-//#define outputFileOptions
+#define outputFileOptions
 
 // Prototypes for merge sort functions
 void mergeSplit(int destArray[], int originArray[], int begin, int end);
