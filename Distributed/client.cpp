@@ -27,7 +27,7 @@ void copy(int destArray[], int originArray[], int begin, int end);
 // Random, high port to reduce likelihood of colliding
 #define PORT 68015
 
-#define debug
+//#define debug
 
 // If defined, turns on extra messages
 //#define chatty
