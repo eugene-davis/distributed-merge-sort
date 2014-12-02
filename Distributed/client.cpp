@@ -27,7 +27,7 @@ void copy(int destArray[], int originArray[], int begin, int end);
 // Random, high port to reduce likelihood of colliding
 #define PORT 68015
 
-//#define debug
+#define debug
 
 // If defined, turns on extra messages
 //#define chatty
@@ -131,7 +131,9 @@ int main()
 	#ifdef debug
 	// debug by writing to file what is being recieved, so it can be compared to client
 	ofstream testFile;
-	testFile.open("testClientList", ofstream::out | ofstream::trunc);
+	string outputFileName = localHostname;
+	outputFileName = outputFileName + "RecievedList";
+	testFile.open(outputFileName.c_str(), ofstream::out | ofstream::trunc);
 	for (int i = 0; i < totalNumbers; i++)
 	{
 		testFile << data[i] << endl;
@@ -174,6 +176,18 @@ int main()
 			return false;
 		}
 	}
+	
+	// debug by writing to file what the
+	// sorted list from the client is
+	#ifdef debug
+	outputFileName = localHostname;
+	outputFileName = outputFileName + "sortedList";
+	testFile.open(outputFileName.c_str(), ofstream::out | ofstream::trunc);
+	for (int i = 0; i < totalNumbers; i++)
+	{
+		testFile << data[i] << endl;
+	}
+	#endif
 
 	#ifdef chatty
 	cout << "Completed sending of data." << endl;
