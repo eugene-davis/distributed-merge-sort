@@ -2,6 +2,8 @@ distributed-merge-sort
 ======================
 Project from CPE 434 at University of Alabama in Hunstville, this software breaks up a set of randomly generated integers into twenty equal pieces, and distributes each of the pieces to one of twenty clients. These clients then perform a parallized merge sort using pthreads, and return their sorted partition to the server.
 
+Also included are the results of running them in the lab provided by UAH - where the parallelized version performed more consistently, but not greatly faster than the serial version.
+
 
 # Usage Notes
 Brief notes on how to use programs and some of their support scripts.
